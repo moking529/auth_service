@@ -101,8 +101,12 @@ class ServiceAuthenticationMiddleware(MiddlewareMixin):
         Returns:
             bool: 是否排除认证
         """
-        # 非测试环境下检查排除路径
+        # 更严格地匹配admin路径，确保所有admin相关请求都能被正确排除
+        if path.startswith('/admin/'):
+            return True
+            
+        # 检查其他排除路径
         for excluded_path in self.EXCLUDED_PATHS:
-            if path.startswith(excluded_path):
+            if path.startswith(excluded_path) and not path.startswith('/admin/'):
                 return True
         return False
