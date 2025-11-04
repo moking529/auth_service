@@ -19,6 +19,7 @@ class ServiceAuthenticationMiddleware(MiddlewareMixin):
         '/api/users/register/',  # 用户注册路径
         '/api/users/login/',  # 用户登录路径
         '/api/users/logout/',  # 用户登出路径
+        '/@vite/client',  # Vite客户端路径
     ]
 
     def process_request(self, request):
@@ -32,13 +33,23 @@ class ServiceAuthenticationMiddleware(MiddlewareMixin):
             None: 认证通过继续处理请求
             JsonResponse: 认证失败返回错误响应
         """
-        # 首先检查是否在测试环境中运行 - 直接跳过所有认证
+        # 打印调试信息到标准输出
         import sys
+        sys.stdout.write(f"[DEBUG] 请求路径: {request.path}\n")
+        sys.stdout.flush()
+        
+        # 首先检查是否在测试环境中运行 - 直接跳过所有认证
         if 'test' in sys.argv:
+            sys.stdout.write("[DEBUG] 测试环境，跳过认证\n")
+            sys.stdout.flush()
             return None
             
         # 检查是否需要排除认证
-        if self._should_exclude_path(request.path):
+        should_exclude = self._should_exclude_path(request.path)
+        sys.stdout.write(f"[DEBUG] 是否排除认证: {should_exclude}\n")
+        sys.stdout.flush()
+        
+        if should_exclude:
             return None
         
         # 获取服务认证头
@@ -101,12 +112,22 @@ class ServiceAuthenticationMiddleware(MiddlewareMixin):
         Returns:
             bool: 是否排除认证
         """
-        # 更严格地匹配admin路径，确保所有admin相关请求都能被正确排除
-        if path.startswith('/admin/'):
+        # 首先检查是否是admin相关路径，支持'/admin'和'/admin/'两种格式
+        if path == '/admin' or path.startswith('/admin/'):
+            return True
+            
+        # 检查是否是Vite客户端路径
+        if path == '/@vite/client':
             return True
             
         # 检查其他排除路径
         for excluded_path in self.EXCLUDED_PATHS:
-            if path.startswith(excluded_path) and not path.startswith('/admin/'):
+            # 完全匹配或路径以排除路径开头
+            if path == excluded_path or path.startswith(excluded_path + '/'):
                 return True
+            
+            # 处理没有尾部斜杠的情况
+            if excluded_path.endswith('/'):
+                if path == excluded_path[:-1] or path.startswith(excluded_path[:-1] + '/'):
+                    return True
         return False

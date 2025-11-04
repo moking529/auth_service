@@ -264,13 +264,13 @@ class ResourcePermission(permissions.BasePermission):
             str: 对应的操作类型
         """
         method_action_map = {
-            'GET': 'view',
-            'POST': 'create',
-            'PUT': 'update',
-            'PATCH': 'update',
-            'DELETE': 'delete'
+            'GET': '查看',
+            'POST': '创建',
+            'PUT': '更新',
+            'PATCH': '更新',
+            'DELETE': '删除'
         }
-        return method_action_map.get(method, 'view')
+        return method_action_map.get(method, '查看')
 
 
 class ProductPermission(ResourcePermission):
@@ -280,4 +280,4 @@ class ProductPermission(ResourcePermission):
     已集成权限日志记录功能
     """
     def __init__(self, action_type=None):
-        super().__init__(resource_type='product', action_type=action_type)
+        super().__init__(resource_type='商品', action_type=action_type)

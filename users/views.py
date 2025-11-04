@@ -253,10 +253,10 @@ class PermissionGroupViewSet(viewsets.ModelViewSet):
     """
     queryset = PermissionGroup.objects.all()
     serializer_class = PermissionGroupSerializer
-    permission_classes = [permissions.IsAuthenticated, ResourcePermissionClass('system', 'view')]
+    permission_classes = [permissions.IsAuthenticated, ResourcePermissionClass('系统', '查看')]
     
     # 设置资源类型
-    resource_type = 'system'
+    resource_type = '系统'
     
     def get_permissions(self):
         """
@@ -278,7 +278,7 @@ class ResourcePermissionViewSet(viewsets.ModelViewSet):
     """
     queryset = ResourcePermission.objects.all()
     serializer_class = ResourcePermissionSerializer
-    permission_classes = [permissions.IsAuthenticated, ResourcePermissionClass('system', 'view')]
+    permission_classes = [permissions.IsAuthenticated, ResourcePermissionClass('系统', '查看')]
     
     # 设置资源类型
     resource_type = 'system'
@@ -289,10 +289,10 @@ class ResourcePermissionViewSet(viewsets.ModelViewSet):
         """
         if self.action in ['list', 'retrieve']:
             # 查看资源权限列表和详情，需要系统查看权限
-            return [permissions.IsAuthenticated(), ResourcePermissionClass('system', 'view')]
+            return [permissions.IsAuthenticated(), ResourcePermissionClass('系统', '查看')]
         else:
             # 创建、更新、删除资源权限，需要系统更新权限
-            return [permissions.IsAuthenticated(), ResourcePermissionClass('system', 'update')]
+            return [permissions.IsAuthenticated(), ResourcePermissionClass('系统', '更新')]
             
     def create(self, request, *args, **kwargs):
         """

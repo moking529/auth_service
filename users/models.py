@@ -12,14 +12,14 @@ class ResourceType(enum.Enum):
     资源类型枚举
     定义系统中可访问的各类资源
     """
-    PRODUCT = 'product'  # 商品
-    USER = 'user'  # 用户
-    ORDER = 'order'  # 订单
-    LIVE = 'live'  # 直播
-    SYSTEM = 'system'  # 系统配置
-    CONTENT = 'content'  # 内容
-    REPORT = 'report'  # 报表
-    ROLE = 'role'  # 角色权限
+    PRODUCT = '商品'  # 商品
+    USER = '用户'  # 用户
+    ORDER = '订单'  # 订单
+    LIVE = '直播'  # 直播
+    SYSTEM = '系统'  # 系统配置
+    CONTENT = '内容'  # 内容
+    REPORT = '报表'  # 报表
+    ROLE = '角色'  # 角色权限
 
 
 class ActionType(enum.Enum):
@@ -27,14 +27,14 @@ class ActionType(enum.Enum):
     操作类型枚举
     定义对资源可执行的各类操作
     """
-    VIEW = 'view'  # 查看
-    CREATE = 'create'  # 创建
-    UPDATE = 'update'  # 更新
-    DELETE = 'delete'  # 删除
-    IMPORT = 'import'  # 导入
-    EXPORT = 'export'  # 导出
-    APPROVE = 'approve'  # 审批
-    REJECT = 'reject'  # 拒绝
+    VIEW = '查看'  # 查看
+    CREATE = '创建'  # 创建
+    UPDATE = '更新'  # 更新
+    DELETE = '删除'  # 删除
+    IMPORT = '导入'  # 导入
+    EXPORT = '导出'  # 导出
+    APPROVE = '审批'  # 审批
+    REJECT = '拒绝'  # 拒绝
 
 
 class PermissionGroup(Group):
@@ -86,15 +86,16 @@ class ResourcePermission(Permission):
         同时确保name和codename基于resource_type和action_type生成
         """
         from django.utils import timezone
-        # 生成标准化的codename
+        # 生成标准化的codename（使用英文作为内部编码）
         if not self.codename:
-            self.codename = f"{self.action_type}_{self.resource_type}"
+            # 获取枚举键名作为英文编码
+            resource_key = next((rt.name for rt in ResourceType if rt.value == self.resource_type), self.resource_type)
+            action_key = next((at.name for at in ActionType if at.value == self.action_type), self.action_type)
+            self.codename = f"{action_key.lower()}_{resource_key.lower()}"
         
-        # 生成可读的name
+        # 生成可读的name（直接使用中文值）
         if not self.name:
-            resource_name = dict([(rt.value, rt.name) for rt in ResourceType]).get(self.resource_type, self.resource_type)
-            action_name = dict([(at.value, at.name) for at in ActionType]).get(self.action_type, self.action_type)
-            self.name = f"{action_name} {resource_name}"
+            self.name = f"{self.action_type} {self.resource_type}"
         
         # 设置时间
         if not self.id:

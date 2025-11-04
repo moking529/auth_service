@@ -53,7 +53,7 @@ class ResourcePermissionAdmin(admin.ModelAdmin):
         """
         显示资源类型的中文名称
         """
-        return dict([(rt.value, rt.name) for rt in ResourceType]).get(obj.resource_type, obj.resource_type)
+        return obj.resource_type
     resource_type_display.short_description = _('资源类型')
     resource_type_display.admin_order_field = 'resource_type'
     
@@ -61,7 +61,7 @@ class ResourcePermissionAdmin(admin.ModelAdmin):
         """
         显示操作类型的中文名称
         """
-        return dict([(at.value, at.name) for at in ActionType]).get(obj.action_type, obj.action_type)
+        return obj.action_type
     action_type_display.short_description = _('操作类型')
     action_type_display.admin_order_field = 'action_type'
 

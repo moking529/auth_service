@@ -272,7 +272,7 @@ class ResourcePermissionSerializer(serializers.ModelSerializer):
     资源权限序列化器
     用于管理"资源+操作"类型的权限
     """
-    # 使用枚举值的选择器
+    # 使用中文枚举值的选择器
     resource_type = serializers.ChoiceField(
         choices=[(rt.value, rt.value) for rt in ResourceType]
     )
