@@ -20,6 +20,7 @@ class ServiceAuthenticationMiddleware(MiddlewareMixin):
         '/api/users/login/',  # 用户登录路径
         '/api/users/logout/',  # 用户登出路径
         '/@vite/client',  # Vite客户端路径
+        '/static/',  # 静态文件路径
     ]
 
     def process_request(self, request):
@@ -118,6 +119,10 @@ class ServiceAuthenticationMiddleware(MiddlewareMixin):
             
         # 检查是否是Vite客户端路径
         if path == '/@vite/client':
+            return True
+            
+        # 检查是否是静态文件路径
+        if path.startswith('/static/'):
             return True
             
         # 检查其他排除路径

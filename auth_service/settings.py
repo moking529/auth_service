@@ -199,6 +199,21 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+# 静态文件目录列表
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
+# 静态文件查找器
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
+
+# 生产环境静态文件配置说明
+# 注意: 在生产环境部署时，必须运行 python manage.py collectstatic
+# 并配置Web服务器(Nginx/Apache)提供静态文件服务
+
 # 日志配置
 LOGGING = {
     'version': 1,
