@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.http import JsonResponse
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 # 根路径欢迎视图
 def welcome_view(request):
@@ -42,3 +44,7 @@ urlpatterns = [
     # 用户认证和授权API
     path('api/', include('users.urls')),
 ]
+
+# 在开发环境中提供静态文件服务
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

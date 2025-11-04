@@ -200,15 +200,20 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # 静态文件目录列表
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
+# 只添加存在的静态文件目录，避免警告
+STATICFILES_DIRS = []
+static_dir = BASE_DIR / 'static'
+if static_dir.exists():
+    STATICFILES_DIRS.append(str(static_dir))
 
 # 静态文件查找器
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
+
+# 静态文件存储后端配置
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 # 生产环境静态文件配置说明
 # 注意: 在生产环境部署时，必须运行 python manage.py collectstatic

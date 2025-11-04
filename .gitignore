@@ -12,6 +12,7 @@ db.sqlite3
 db.sqlite3-journal
 staticfiles/
 media/
+nginx.conf
 
 # Virtual Environment
 venv/
